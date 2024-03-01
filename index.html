@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Player</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+  /* Common styles for light and dark mode */
+  .search-container, .season-box {
+    position: relative;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333; /* Default color for light mode */
+  }
+
+  body[data-theme="dark"] .search-container, 
+  body[data-theme="dark"] .season-box {
+    color: #fff; /* Color for dark mode */
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    margin: 50px auto;
+  }
+
+  .search-box {
+    width: calc(100% - 40px);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #fff;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .search-box:focus {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .search-icon {
+    margin-left: 10px;
+    color: #888;
+    cursor: pointer;
+  }
+
+  .movie-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
+
+  .movie {
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  .movie img {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .movie img:hover {
+    transform: scale(1.05);
+  }
+
+  /* Styles for dark mode */
+  body[data-theme="dark"] {
+    background-color: #171515;
+    color: #fff;
+  }
+
+   /* Random big pictures section */
+  .random-pictures-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+   .random-picture {
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  .random-picture img {
+    width: 300px;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .random-picture img:hover {
+    transform: scale(1.05);
+  }
+
+/* Styles for the seasons buttons */
+.season-dropdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.season-dropdown button {
+  padding: 8px 16px;
+  margin: 5px;
+  border: none;
+  background-color: #2196F3; /* Blue color */
+  color: #fff;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+
+.season-dropdown button:hover {
+  background-color: #0d47a1; /* Darker blue on hover */
+}
+
+/* Dark mode styles */
+body[data-theme="dark"] .season-dropdown button {
+  background-color: #242323; /* Dark color for dark mode */
+  color: #fff;
+}
+
+  /* Toggle switch for dark mode */
+  .theme-switch {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+  }
+
+  .theme-switch input[type="checkbox"] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  .theme-switch label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 40px;
+    height: 20px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+  }
+
+  .theme-switch label:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+  }
+
+  .theme-switch input:checked + label {
+    background: #2196F3;
+  }
+
+  .theme-switch input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+
+  /* Styles for the modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 50%; /* Move modal to the middle of the screen */
+    transform: translateY(-50%); /* Center vertically */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Semi-transparent background */
+    padding-top: 60px;
+  }
+
+  .modal-content {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Box shadow */
+    width: 60%;
+    max-height: 80%;
+    overflow-y: auto;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* Dark mode styles */
+body[data-theme="dark"] .modal-content {
+  background-color: rgb(54, 53, 53, 0.8); /* Dark color for dark mode */
+  color: #fff;
+}
+
+  /* Styles for the episode dropdown */
+  .episode-dropdown {
+    display: none;
+    position: absolute;
+    width: 90%;
+    max-height: 60%; 
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Box shadow */
+    bottom: 0;
+    left: 5%;
+  }
+
+  .episode-dropdown button {
+    padding: 8px 16px;
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: inherit;
+    color: black;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .episode-dropdown button:hover {
+    background-color: #ddd;
+  }
+
+ /* Dark mode styles */
+body[data-theme="dark"] .episode-dropdown button {
+  background-color: rgb(54, 53, 53, 0.8); /* Dark color for dark mode */
+  color: white;
+}
+
+ /* Dark mode styles */
+body[data-theme="dark"] .episode-dropdown {
+  background-color: rgb(54, 53, 53, 0.8); /* Dark color for dark mode */
+  color: #fff;
+}
+
+ /* Dark mode styles */
+body[data-theme="dark"] .episode-dropdown button:hover {
+  background-color: #4a4949; /* Dark color for dark mode */
+  color: #fff;
+}
+</style>
+</head>
+<body>
+
+<div class="theme-switch">
+  <input type="checkbox" id="darkModeToggle">
+  <label for="darkModeToggle">Toggle dark mode</label>
+</div>
+
+<div class="search-container">
+  <input type="text" class="search-box" id="movieSearch" placeholder="Search for a movie or TV show...">
+  <i class="fas fa-search search-icon" onclick="searchMovies(document.getElementById('movieSearch').value)"></i>
+</div>
+
+<script>
+  // Function to handle search when Enter key is pressed
+  document.getElementById('movieSearch').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      searchMovies(this.value);
+    }
+  });
+</script>
+
+<div class="movie-container" id="movieResults"></div>
+
+<div class="random-pictures-container" id="randomPictures"></div>
+
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="season-box" id="seasonBox">Season Box</div>
+    <div class="season-dropdown" id="seasonDropdown"></div>
+    <div class="episode-dropdown" id="episodeDropdown"></div>
+  </div>
+</div>
+
+<script>
+  let selectedShowId = null;
+  let videoPlayer = null;
+
+   const apiKey = 'd0c43245c42d3a21cd003985836c14aa'; // Get your API key from 
+
+  // Function to toggle dark mode
+  document.getElementById('darkModeToggle').addEventListener('change', function() {
+    const body = document.querySelector('body');
+    body.dataset.theme = this.checked ? 'dark' : 'light';
+  });
+
+  // Function to search for movies and TV shows using The Movie Database (TMDb) API
+  function searchMovies(query) {
+
+    const url = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${query}`;
+    
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        displayMovies(data.results);
+      })
+      .catch(error => console.log('Error fetching data:', error));
+  }
+
+  // Function to display search results
+  function displayMovies(results) {
+    const movieResults = document.getElementById('movieResults');
+    movieResults.innerHTML = '';
+
+    results.forEach(result => {
+      if (result.poster_path) {
+        const movieElement = document.createElement('div');
+        movieElement.classList.add('movie');
+        movieElement.innerHTML = `
+          <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" alt="${result.title}">
+        `;
+        movieElement.addEventListener('click', () => {
+          if (result.media_type === 'tv') {
+            selectedShowId = result.id;
+            openSeasonsModal();
+          } else {
+            playMovie(result.title);
+          }
+        });
+        movieResults.appendChild(movieElement);
+      }
+    });
+ 
+
+     displayRandomPictures(); // No need to pass search results here
+  }
+
+  // Function to display random big pictures at the bottom of the home page
+  function displayRandomPictures() {
+    const randomPicturesContainer = document.getElementById('randomPictures');
+    randomPicturesContainer.innerHTML = '';
+
+    const randomUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&sort_by=popularity.desc&include_adult=false&page=1`;
+    
+    fetch(randomUrl)
+      .then(response => response.json())
+      .then(data => {
+        const randomResults = data.results;
+        const randomSelection = getRandomSelection(randomResults, 3); // Select 3 random movies
+        randomSelection.forEach(result => {
+          if (result.poster_path) {
+            const randomPicture = document.createElement('div');
+            randomPicture.classList.add('random-picture');
+            randomPicture.innerHTML = `
+              <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" alt="${result.title}">
+            `;
+            randomPicture.addEventListener('click', () => {
+              playMovie(result.title);
+            });
+            randomPicturesContainer.appendChild(randomPicture);
+          }
+        });
+      })
+      .catch(error => console.log('Error fetching random movies:', error));
+  }
+
+  // Function to get a random selection from an array
+  function getRandomSelection(array, count) {
+    const shuffled = array.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+
+// Function to open the modal for selecting seasons
+function openSeasonsModal() {
+  const modal = document.getElementById('myModal');
+  const seasonBox = document.getElementById('seasonBox');
+  const seasonDropdown = document.getElementById('seasonDropdown');
+  seasonDropdown.innerHTML = '';
+
+  // Fetch the seasons for the selected TV show
+  fetchSeasons(selectedShowId)
+    .then(seasons => {
+      seasons.forEach(season => {
+        if (season.season_number !== 0) { // Exclude season 0
+          const seasonButton = document.createElement('button');
+          seasonButton.textContent = `Season ${season.season_number}`;
+          seasonButton.addEventListener('click', () => {
+            openEpisodesModal(season.season_number);
+          });
+          seasonDropdown.appendChild(seasonButton);
+        }
+      });
+    })
+    .catch(error => console.log('Error fetching seasons:', error));
+
+  modal.style.display = 'block';
+  seasonBox.textContent = 'Season Box';
+}
+
+  // Function to fetch seasons of a TV show
+  async function fetchSeasons(showId) {
+
+    const url = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.seasons;
+  }
+
+  // Function to open the modal for selecting episodes
+  function openEpisodesModal(seasonNumber) {
+    const modal = document.getElementById('myModal');
+    const episodeDropdown = document.getElementById('episodeDropdown');
+    episodeDropdown.innerHTML = '';
+
+    // Fetch the episodes for the selected season of the TV show
+    fetchEpisodes(selectedShowId, seasonNumber)
+      .then(episodes => {
+        episodes.forEach(episode => {
+          const episodeButton = document.createElement('button');
+          episodeButton.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
+          episodeButton.addEventListener('click', () => {
+            playEpisode(episode.name);
+          });
+          episodeDropdown.appendChild(episodeButton);
+        });
+      })
+      .catch(error => console.log('Error fetching episodes:', error));
+
+    episodeDropdown.style.display = 'block';
+  }
+
+  // Function to toggle dark mode
+document.getElementById('darkModeToggle').addEventListener('change', function() {
+  const body = document.querySelector('body');
+  const darkModeEnabled = this.checked;
+  body.dataset.theme = darkModeEnabled ? 'dark' : 'light';
+  // Save the dark mode toggle state to localStorage
+  localStorage.setItem('darkModeEnabled', darkModeEnabled);
+});
+
+// Function to load dark mode toggle state from localStorage
+document.addEventListener('DOMContentLoaded', function() {
+  const darkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
+  document.getElementById('darkModeToggle').checked = darkModeEnabled;
+  const body = document.querySelector('body');
+  body.dataset.theme = darkModeEnabled ? 'dark' : 'light';
+});
+
+// Function to display random movies or TV shows when the site is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Number of random items to display
+  const numRandomItems = 6; // You can adjust this number as needed
+  
+  // Function to select a random subset of results
+  function getRandomSubset(results, numItems) {
+    const shuffled = results.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, numItems);
+  }
+
+  // Function to fetch random movies or TV shows
+  function fetchRandomMoviesAndShows() {
+
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&sort_by=popularity.desc&page=1&vote_count.gte=100&include_adult=false`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const randomMovies = getRandomSubset(data.results, numRandomItems);
+        displayMovies(randomMovies);
+      })
+      .catch(error => console.log('Error fetching data:', error));
+  }
+
+  fetchRandomMoviesAndShows();
+});
+
+  // Function to fetch episodes of a specific season of a TV show
+  async function fetchEpisodes(showId, seasonNumber) {
+
+    const url = `https://api.themoviedb.org/3/tv/${showId}/season/${seasonNumber}?api_key=${apiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.episodes;
+  }
+
+
+  // Function to close the modal
+  function closeModal() {
+    const modal = document.getElementById('myModal');
+    modal.style.display = 'none';
+    const episodeDropdown = document.getElementById('episodeDropdown');
+    episodeDropdown.style.display = 'none';
+  }
+
+// Function to play a movie or episode
+function playMedia(title, extensions) {
+  console.log('Playing media:', title);
+  
+  // Array to hold all fetch promises
+  const fetchPromises = [];
+
+  // Iterate through each provided extension
+  for (let extension of extensions) {
+    const videoPath = `videos/${title}.${extension}`; // Adjust the path to your video files
+
+    // Create a fetch promise for each video file
+    const fetchPromise = fetch(videoPath)
+      .then(response => {
+        if (response.ok) {
+          // If video file found, redirect to HTML5 player with the videoPath
+          window.location.href = `html5player.html?videoPath=${encodeURIComponent(videoPath)}`;
+          return true; // Indicate success
+        } else {
+          return false; // Indicate failure
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching video:', error);
+        return false; // Indicate failure
+      });
+
+    // Add fetch promise to the array
+    fetchPromises.push(fetchPromise);
+  }
+  
+  // Wait for all fetch promises to complete
+  Promise.all(fetchPromises)
+    .then(results => {
+      // Check if any fetch promise succeeded
+      const fileFound = results.some(result => result);
+      if (!fileFound) {
+        // If no valid file found, display error message
+        alert("Sorry, can't find this episode.");
+      }
+    });
+}
+
+// Function to play a movie
+function playMovie(title) {
+  playMedia(title, ['mkv', 'mp4']);
+}
+
+// Function to play an episode
+function playEpisode(episodeName) {
+  playMedia(episodeName, ['mkv', 'mp4']);
+}
+  
+</script>
+
+</body>
+</html>
