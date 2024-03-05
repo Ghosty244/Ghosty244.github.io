@@ -175,6 +175,11 @@ body[data-theme="dark"] .season-box {
    color: #333;
    font-size: 14px;
 }
+  body[data-theme="dark"] .download-to-apk {
+   background-color: #fff; 
+   color: #333;
+   font-size: 14px;
+}
   body[data-theme="light"] .theme-switch input:checked + label:after {
    background: #fff;
    font-size: 14px;
@@ -419,6 +424,32 @@ body[data-theme="dark"] .season-box {
         font-size: 14px;
         top: 5px;
         left: 10px;
+    }
+}
+
+.download-to-apk {
+    position: absolute;
+    top: 10px;
+    left: 150px;
+    padding: 10px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 14px; 
+}
+.download-to-apk:hover {
+    background-color: #555;
+}
+@media screen and (max-width: 768px) {
+    .download-to-apk {
+        padding: 8px 12px;
+        font-size: 14px;
+        top: 5px;
+        left: 140px;
     }
 }
   .watermark {
