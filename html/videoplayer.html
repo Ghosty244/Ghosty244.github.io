@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netlify Player</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #242424;
+  }
+
+  #backButton {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #424242;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  #backButton:hover {
+    background-color: #7a7979; /* Darker blue on hover */
+  }
+
+  iframe {
+    width: 90%; /* Adjust the width as needed */
+    height: 85%; /* Adjust the height as needed */
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Optional: Add box shadow for a visual effect */
+  }
+
+  @media screen and (max-width: 1000px) {
+    /* Adjust styles for smaller screens */
+    iframe {
+      width: 90%;
+      height: 70vh; /* Adjust the height for better visibility on smaller screens */
+    }
+
+    #backButton {
+      font-size: 14px;
+    }
+  }
+
+
+</style>
+</head>
+<body>
+
+<button id="backButton" onclick="redirectToIndex()">Back to Movie Player</button>
+
+<!-- Video player embedded here using the embedUrl parameter -->
+<iframe id="videoPlayer" src="" allowfullscreen referrerpolicy="origin"></iframe>
+
+<script>
+
+function redirectToIndex() {
+    window.location.href = "../index.html";
+}
+
+// Retrieve the embed URL from the query parameter
+const urlParams = new URLSearchParams(window.location.search);
+const embedUrl = urlParams.get('embedUrl');
+
+
+// Embed the video by setting the iframe src
+const iframe = document.getElementById('videoPlayer');
+iframe.src = embedUrl;
+</script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies Seen</title>
+    <style>
+        body {
+           /* Updated font family */
+            line-height: 1.6;
+            margin: 20px;
+            transition: background-color 0.3s, color 0.3s; /* Added transition for background-color and color */
+            position: relative;
+            background-color: #d2d3db; /* Change background color to grey */
+            color: #333; /* Default text color */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px; /* Increased font size */
+            transition: color 0.3s; /* Added transition for color */
+        }
+
+        #watchedList {
+            margin: 0 auto;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center; /* Center-align the content */
+            transition: opacity 0.3s; /* Added transition for opacity */
+        }
+
+        .watched-item {
+            text-align: center;
+            transition: opacity 0.3s; /* Added transition for opacity */
+        }
+
+        .watched-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.3s; /* Added transition for border-color */
+            border: 2px solid; /* Remove specific border color */
+        }
+
+        .watched-item img:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .watched-item a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 16px; /* Adjust font size */
+            font-weight: bold; /* Make the font bold */
+            transition: color 0.3s; /* Added transition for color */
+        }
+
+        #clearButton {
+            display: block;
+          
+            margin-top: 20px;
+            text-align: center;
+            transition: opacity 0.3s; /* Added transition for opacity */
+        }
+
+        /* Dark mode switch */
+        .dark-mode-switch {
+            position: absolute;
+            top: -5px;
+            right: -15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .dark-mode-switch input {
+            display: none;
+        }
+
+        .dark-mode-slider {
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+            position: relative;
+            margin-right: 10px;
+            background-color: #424242; /* Default slider color */
+        }
+
+        .dark-mode-slider:before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #333; /* Default thumb color */
+            top: 0;
+            left: 0;
+            transition: transform 0.2s ease; /* Reduced transition duration */
+            transform: translateX(0);
+        }
+
+        input:checked + .dark-mode-slider:before {
+            transform: translateX(30px);
+            background-color: #cfcfcf; /* Thumb color in dark mode */
+        }
+
+        /* Additional style for slider in dark mode */
+        body.dark-mode .dark-mode-slider {
+            background-color: #fff; /* Slider color in dark mode */
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #1f1f1f;
+            color: #ffffff;
+        }
+
+        #clearButton button {
+            background-color: #333;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+          
+        }
+
+        /* Dark mode styles for specific elements */
+        .dark-mode #clearButton button {
+            background-color: #fff;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode #clearButton button:hover {
+            background-color: #555;
+        }
+
+        .dark-mode .back-to-site {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .dark-mode .watched-item img {
+            border: 2px solid #ffffff;
+        }
+
+        .dark-mode .watched-item a {
+            color: #ffffff; /* Text color changed to white in dark mode */
+        }
+
+        /* Back to site button */
+        .back-to-site {
+            position: absolute;
+            top: -10px;
+            left: 2px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .back-to-site:hover {
+            background-color: #555;
+        }
+
+        /* Media query for smaller screens (phones) */
+        @media screen and (max-width: 768px) {
+            .back-to-site {
+                padding: 7px 8px;
+                font-size: 14px;
+                top: -10px;
+                left: -15px;
+            }
+        }
+
+        /* Conditional border color for light mode */
+        body.light-mode .watched-item img {
+            border-color: #353839; /* Black border in light mode */
+        }
+
+        /* Conditional border color for dark mode */
+        body.dark-mode .watched-item img {
+            border-color: #fff; /* White border in dark mode */
+        }
+
+        /* Transitioning class */
+        body.transitioning {
+            transition: none; /* Disable transition during transition */
+        }
+    </style>
+</head>
+<body class="light-mode">
+<a href="../index.html" class="back-to-site">Back to Site</a>
+<h1>Movies Seen</h1>
+<div id="watchedList">
+    <!-- Watched items will be appended here dynamically -->
+</div>
+
+<div id="clearButton">
+    <button onclick="clearWatchedList()" class="clear-button">Clear Watched List</button>
+</div>
+
+<!-- Dark mode switch -->
+<label class="dark-mode-switch">
+    <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+    <div class="dark-mode-slider"></div>
+</label>
+
+<script>
+    // Function to toggle between dark and light mode
+    function toggleDarkMode() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeEnabled = darkModeToggle.checked;
+
+        // Add transitioning class to disable transition during transition state
+        document.body.classList.add('transitioning');
+
+        // Toggle the 'dark-mode' class on the body after a slight delay
+        setTimeout(() => {
+            if (darkModeEnabled) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+
+            // Remove transitioning class after the transition is complete
+            setTimeout(() => {
+                document.body.classList.remove('transitioning');
+            }, 300); // Adjust timing if necessary
+        }, 100); // Adjust timing if necessary
+
+        // Save the dark mode state in local storage
+        localStorage.setItem('darkModeEnabled', darkModeEnabled ? 'true' : 'false');
+    }
+
+    // Function to check and set dark mode on page load
+    function checkDarkMode() {
+        // Retrieve dark mode state from local storage
+        const darkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        // Set dark mode based on the stored state
+        darkModeToggle.checked = darkModeEnabled;
+        if (darkModeEnabled) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // Call the checkDarkMode function when the page loads to set the initial dark mode state
+    checkDarkMode();
+
+    // Define your API key here
+    const apiKey = 'd0c43245c42d3a21cd003985836c14aa';
+
+    // Function to add a movie to the watched list
+    function addToWatched(title) {
+        const watchedList = localStorage.getItem('watchedList');
+        const watchedItems = watchedList ? JSON.parse(watchedList) : [];
+        const isAlreadyWatched = watchedItems.includes(title);
+        if (!isAlreadyWatched) {
+            watchedItems.push(title);
+            localStorage.setItem('watchedList', JSON.stringify(watchedItems));
+        }
+    }
+
+    // Function to display the watched list
+    function displayWatchedList() {
+        const watchedList = localStorage.getItem('watchedList');
+        const watchedItems = watchedList ? JSON.parse(watchedList) : [];
+        const watchedListDiv = document.getElementById('watchedList');
+        watchedListDiv.innerHTML = '';
+        watchedItems.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('watched-item');
+            const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(item)}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        const movieId = data.results[0].id;
+                        fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`)
+                            .then(response => response.json())
+                            .then(movieData => {
+                                const posterPath = movieData.poster_path;
+                                const posterImg = document.createElement('img');
+                                posterImg.src = `https://image.tmdb.org/t/p/w500${posterPath}`;
+                                posterImg.alt = item;
+                                posterImg.addEventListener('click', function() {
+                                    playMovie(item);
+                                });
+                                itemDiv.appendChild(posterImg);
+                                const itemLink = document.createElement('a');
+                                itemLink.href = '#';
+                                itemLink.textContent = item;
+                                itemLink.addEventListener('click', function(event) {
+                                    event.preventDefault();
+                                    playMovie(item);
+                                });
+                                itemDiv.appendChild(itemLink);
+                                watchedListDiv.appendChild(itemDiv);
+                            })
+                            .catch(error => console.log('Error fetching movie data:', error));
+                    } else {
+                        alert("Movie not found.");
+                    }
+                })
+                .catch(error => console.log('Error fetching data:', error));
+        });
+    }
+
+    // Function to clear the watched list
+    function clearWatchedList() {
+        localStorage.removeItem('watchedList');
+        displayWatchedList();
+    }
+
+    // Function to play a movie using vidsrc.to
+    function playMovie(title) {
+        addToWatched(title);
+        const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(title)}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.results && data.results.length > 0) {
+                    const movieId = data.results[0].id;
+                    const embedUrl = `https://vidsrc.to/embed/movie/${movieId}`;
+                    window.location.href = `videoplayer.html?embedUrl=${encodeURIComponent(embedUrl)}`;
+                } else {
+                    alert("Movie not found.");
+                }
+            })
+            .catch(error => console.log('Error fetching data:', error));
+    }
+
+    // Call the displayWatchedList function when the page loads
+    displayWatchedList();
+</script>
+</body>
+</html>

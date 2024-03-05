@@ -1,0 +1,516 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Style the draggable region */
+#drag-region {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px; /* Adjust height as needed */
+    cursor: move; /* Show cursor as move */
+}
+
+/* Make scrollbar transparent */
+#content::-webkit-scrollbar {
+    width: 12px; /* Adjust the width as needed */
+}
+
+#content::-webkit-scrollbar-track {
+    background-color: transparent; /* Make the scrollbar track transparent */
+}
+
+#content::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Make the scrollbar thumb (the draggable part) transparent */
+}
+
+/* Style the content area */
+#content {
+    position: relative;
+    height: 100%;
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+  footer {
+    text-align: center; /* Center align the content */
+    margin-top: 20px; /* Adjust margin as needed */
+}
+
+body[data-theme="dark"] .search-container, 
+body[data-theme="dark"] .season-box {
+
+     color: #fff; /* Color for dark mode */
+}
+
+  /* Common styles for light and dark mode */
+.search-container, .season-box {
+  position: relative;
+  text-align: center;
+  margin-bottom: 2.5%;
+  color: #333; /* Default color for light mode */
+}
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    margin: 50px auto;
+  }
+
+  .search-box {
+    width: calc(100% - 40px);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .search-box:focus {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .search-icon {
+    margin-left: 10px;
+    color: #888;
+    cursor: pointer;
+  }
+
+  .movie-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.movie {
+    margin: 10px;
+    cursor: pointer;
+}
+
+.movie img {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Add border-color transition */
+    border: 2px solid; 
+}
+
+.movie img:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+  body[data-theme="light"] .movie img {
+    border-color: #353839; 
+}
+  body[data-theme="dark"] {
+    background-color: #171515;
+    color: #fff;
+}
+  body[data-theme="light"] {
+    background-color: #d2d3db;
+    color: #fff;
+}
+  body, .search-container, .season-box {
+    transition: background-color 0.5s, color 0.5s; 
+}
+  body[data-theme="dark"] {
+   background-color: #171515;
+   color: #fff;
+}
+  body[data-theme="light"] .random-picture img {
+   width: 100%; 
+   height: auto;
+   object-fit: cover;
+   border-radius: 10px;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; 
+   border: 2px solid; 
+}
+  body[data-theme="light"] .theme-switch label {
+   cursor: pointer;
+   text-indent: -9999px;
+   width: 50px;
+   height: 25px;
+   background: #333;
+   display: block;
+   border-radius: 25px;
+   position: relative;
+}
+  body[data-theme="light"] .theme-switch label:after {
+   content: '';
+   position: absolute;
+   top: 2px;
+   left: 2px;
+   width: 21px;
+   height: 21px;
+   background: #424242;
+   border-radius: 50%;
+   transition: 0.3s;
+}
+  body[data-theme="light"] .random-picture img {
+    border-color: #353839; 
+}
+  body[data-theme="dark"] .season-dropdown button {
+   background-color: #242323; 
+   color: #fff;
+   font-size: 14px;
+}
+  body[data-theme="light"] .season-dropdown button {
+   background-color: #242323;
+   color: #fff;
+   font-size: 14px;
+}
+  body[data-theme="dark"] .back-to-site {
+   background-color: #fff; 
+   color: #333;
+   font-size: 14px;
+}
+  body[data-theme="light"] .theme-switch input:checked + label:after {
+   background: #fff;
+   font-size: 14px;
+}
+  body[data-theme="light"] .theme-switch input:checked + label {
+   background: #333;
+   font-size: 14px;
+}
+  body[data-theme="dark"] .modal-content {
+   background-color: rgb(54, 53, 53, 0.8); 
+   color: #fff;
+   font-size: 14px;
+}
+  body[data-theme="dark"] .episode-dropdown button {
+   background-color: rgb(54, 53, 53, 0.8);
+   color: white;
+   font-size: 14px;
+}
+  body[data-theme="dark"] .episode-dropdown {
+   background-color: rgb(54, 53, 53, 0.8);
+   color: #fff;
+   font-size: 14px;
+}
+  body[data-theme="dark"] .episode-dropdown button:hover {
+   background-color: #4a4949;
+   color: #fff;
+   font-size: 14px;
+}
+  body[data-theme="light"] .footer 
+  .watermark {color: #333; 
+}
+  body[data-theme="dark"] .footer 
+  .watermark {color: #fff; 
+}
+
+  body[data-theme="light"] .footer 
+  .tmdb a {color: #545353; 
+}
+  body[data-theme="dark"] .footer 
+  .tmdb a  {color: #fff; 
+}
+
+  body[data-theme="light"] .footer 
+  .lee a {color: #545353; 
+}
+  body[data-theme="dark"] .footer 
+  .lee a {color: #fff; 
+}
+.random-pictures-container {
+  transition: background-color 0.5s;
+}
+.season-dropdown button {
+  transition: background-color 0.5s;
+}
+.theme-switch {
+  transition: opacity 0.5s;
+}
+.theme-switch input[type="checkbox"] + label {
+  transition: background-color 0.5s; 
+}
+.random-pictures-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+}
+.random-picture {
+  margin: 2.5%;
+  cursor: pointer;
+  width: 50%; 
+}
+.random-picture img {
+  width: 100%; 
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; 
+  border: 2px solid;
+}
+.random-picture img:hover {
+  transform: scale(1.05);
+}
+.season-dropdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 14px;
+
+}
+.season-dropdown button {
+  padding: 2% 4%;
+  margin: 1%;
+  border: none;
+  background-color: #2196F3;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+.season-dropdown button:hover {
+  background-color: #0d47a1; 
+}
+.theme-switch {
+  position: absolute;
+  top: -0.25%; 
+  right: 2.5%;
+}
+.theme-switch input[type="checkbox"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+.theme-switch label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 50px;
+  height: 25px;
+  background: #ccc;
+  display: block;
+  border-radius: 25px;
+  position: relative;
+}
+.theme-switch label:after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.theme-switch input:checked + label {
+  background: #dbdbdb;
+}
+.theme-switch input:checked + label:after {
+  left: calc(100% - 2px);
+  background: #bdbdbd;
+  transform: translateX(-100%);
+}
+/* Styles for the season dropdown */
+.season-dropdown {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #373738; /* Light gray background color */
+  border-radius: 5px;
+}
+/* Styles for the episode dropdown */
+.episode-dropdown {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #373738 !important; /* Lighter gray background color */
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+/* Styles for the episode select buttons */
+.episode-dropdown button {
+  padding: 10px 20px; /* Adjust padding as needed */
+  margin: 5px; /* Adjust margin as needed */
+  background-color: #282424 !important; /* Green background color */
+  color: #fff !important; /* White text color */
+  border: none !important;
+  border-radius: 5px !important;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.episode-dropdown button:hover {
+  background-color: #616060 !important; /* Darker green background color on hover */
+}
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background-color: #fefefe; /* White background color */
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  border-radius: 10px;
+  transition: transform 0.3s ease; /* Add transition for smooth effect */
+  position: relative; /* Position relative for absolute positioning */
+}
+/* Close icon styles */
+.close {
+  color: #aaa;
+  position: absolute; /* Position the close icon absolutely */
+  top: -15px; /* Adjust top position as needed */
+  left: 15px; /* Adjust left position as needed */
+  font-size: 60px !important; /* Increase font size for better visibility */
+  font-weight: bold;
+  cursor: pointer;
+  padding: -60px; /* Increase padding for easier clicking */
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* Media query for portrait mode */
+@media screen and (orientation: portrait) {
+  .close {
+    padding: -30px; /* Increase padding for easier pressing */
+    font-size: 60px !important; /* Increase font size for better visibility */
+    top: -15px; /* Adjust top position as needed */
+    left: 10px; /* Adjust left position as needed */
+  }
+}
+.back-to-site {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    padding: 10px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 14px; 
+}
+.back-to-site:hover {
+    background-color: #555;
+}
+@media screen and (max-width: 768px) {
+    .back-to-site {
+        padding: 8px 12px;
+        font-size: 14px;
+        top: 5px;
+        left: 10px;
+    }
+}
+  .watermark {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    margin-top: 10px;
+}
+  .watermark a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+  .watermark a:hover {
+    text-decoration: underline;
+}
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+.watermark {
+    color: #777;
+    font-style: italic;
+}
+.tmdb a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
+.tmdb a:hover {
+    text-decoration: underline;
+}
+.lee a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
+.lee a:hover {
+    text-decoration: underline;
+}
+.netlifyalert {
+  display: none;
+  position: absolute; /* Use fixed position for full-screen overlay */
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: rgb(0,0,0,0.2);
+  height: 100%;
+}
+.netlif-content {
+  background-color: #333;
+  color: #fff;
+  margin: 15% auto;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 16px;
+  font-family: "Gill Sans", sans-serif;
+  width: 50%;
+  text-align: center;
+}
+  body[data-theme="dark"] .netlif-content {
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+  font-family: "Gill Sans", sans-serif;
+}
+/* Style for the close icon */
+.close {
+  color: #aaa;
+  position: absolute;
+  width: 50%;
+  font-size: 28px; /* Adjust the font size as needed */
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .close {
+    width: 50%;
+    font-size: 15px; /* Adjust the font size for smaller screens */
+  }
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+body,
+html {
+    scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+    display: none;
+}
